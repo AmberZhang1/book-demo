@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.bookdemo.dao.IBookRecordMapper">
+  <!-- 返回结果映射 -->
+  <resultMap id="bookRecordResultMap" type="com.demo.bookdemo.entity.BookRecord">
+    <id property="id" column="id"/>
+    <!-- 图书ID -->
+    <result property="bookId" column="bookId"/>
+    <!-- 开始时间 -->
+    <result property="startDate" column="startDate"/>
+    <!-- 结束时间 -->
+    <result property="endDate" column="endDate"/>
+    <!-- 租书人姓名 -->
+    <result property="userName" column="userName"/>
+    <!-- 租书人联系方式 -->
+    <result property="userPhone" column="userPhone"/>
+    <!-- 状态 0,未还 1 已还 -->
+    <result property="state" column="state"/>
+    <!-- 租书费用 -->
+    <result property="totalPrice" column="totalPrice"/>
+    
+    <!--图书信息-->
+    <association property="book" column="b_id" javaType="com.demo.bookdemo.entity.Book">
+      <id property="id" column="b_id"/>
+      <!-- 名称 -->
+      <result property="name" column="b_name"/>
+      <!-- 作者 -->
+      <result property="author" column="b_author"/>
+      <!-- 出版社 -->
+      <result property="press" column="b_press"/>
+      <!-- 总数 -->
+      <result property="total" column="b_total"/>
+      <!-- 当前库存 -->
+      <result property="current" column="b_current"/>
+      <!-- 借出数量 -->
+      <result property="amount" column="b_amount"/>
+      <!-- 单价（每分钟） -->
+      <result property="price" column="b_price"/>
+      <!-- 类型 -->
+      <result property="type" column="b_type"/>
+    </association>
+  </resultMap>
+
+  <sql id="columnAll">
+    r.id, r.startDate, r.bookId, r.endDate, r.userName, r.userPhone, r.totalPrice, r.state,
+    b.id as b_id,b.name as b_name,b.author as b_author,b.press as b_press,
+    b.total as b_total,b.current as b_current,b.amount as b_amount,b.price as b_price,b.type as b_type
+  </sql>
+
+  <sql id="search">
+    <if test="item.book != null">
+      <if test="item.book.name != null and item.name != ''">
+        and b.name like concat('%',#{item.book.name},'%')
+      </if>
+      <if test="item.book.author != null and item.author != ''">
+        and b.author like concat('%',#{item.book.author},'%')
+      </if>
+      <if test="item.book.press != null and item.press != ''">
+        and b.press like concat('%',#{item.book.press},'%')
+      </if>
+      <if test="item.book.type != null">
+        and b.type = #{item.book.type}
+      </if>
+    </if>
+  </sql>
+  <!-- 查询集合 -->
+  <select id="findList" resultMap="bookRecordResultMap">
+    select <include refid="columnAll"/>
+    from book_record r
+    left join book b on r.bookId = b.id
+    where 1=1
+    <include refid="search"/>
+    limit #{pageIndex},#{pageSize}
+  </select>
+
+  <select id="findCount" resultType="int">
+    select count(r.id) from book_record r left join book b on r.bookId = b.id
+    where 1=1
+    <include refid="search"/>
+  </select>
+
+  <select id="getById" resultMap="bookRecordResultMap">
+    select <include refid="columnAll"/>
+    from book_record r left join book b on r.bookId = b.id
+    where r.id = #{id}
+  </select>
+
+  <insert id="add">
+    insert into book_record(
+       startDate,
+       bookId,
+       userName,
+       userPhone,
+       state
+    )
+    VALUES (
+        #{item.startDate},
+        #{item.bookId},
+        #{item.userName},
+        #{item.userPhone},
+        0
+    )
+  </insert>
+
+  <update id="update">
+    update book_record
+      set endDate = #{item.endDate},
+          state = 1,
+          totalPrice = #{item.totalPrice}
+    where id = #{item.id}
+  </update>
+
+</mapper>

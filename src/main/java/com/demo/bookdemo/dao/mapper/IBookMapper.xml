@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.bookdemo.dao.IBookMapper">
+  <!-- 返回结果映射 -->
+  <resultMap id="bookResultMap" type="com.demo.bookdemo.entity.Book">
+    <id property="id" column="id"/>
+    <!-- 名称 -->
+    <result property="name" column="name"/>
+    <!-- 作者 -->
+    <result property="author" column="author"/>
+    <!-- 出版社 -->
+    <result property="press" column="press"/>
+    <!-- 总数 -->
+    <result property="total" column="total"/>
+    <!-- 当前库存 -->
+    <result property="current" column="current"/>
+    <!-- 借出数量 -->
+    <result property="amount" column="amount"/>
+    <!-- 单价（每分钟） -->
+    <result property="price" column="price"/>
+    <!-- 类型 -->
+    <result property="type" column="type"/>
+  </resultMap>
+
+  <sql id="columnAll">
+    b.id,b.name,b.author,b.press,b.total,b.current,b.amount,b.price,b.type
+  </sql>
+
+  <sql id="search">
+    <if test="item.name != null and item.name != ''">
+      and b.name like concat('%',#{item.name},'%')
+    </if>
+    <if test="item.author != null and item.author != ''">
+      and b.author like concat('%',#{item.author},'%')
+    </if>
+    <if test="item.press != null and item.press != ''">
+      and b.press like concat('%',#{item.press},'%')
+    </if>
+    <if test="item.type != null">
+      and b.type = #{item.type}
+    </if>
+  </sql>
+  <!-- 查询集合 -->
+  <select id="findList" resultMap="bookResultMap">
+    select <include refid="columnAll"/>
+    from book b
+    where 1=1
+    <include refid="search"/>
+    limit #{pageIndex},#{pageSize}
+  </select>
+
+  <select id="findCount" resultType="int">
+    select count(1) from book b
+    where 1=1
+    <include refid="search"/>
+  </select>
+
+  <select id="getById" resultMap="bookResultMap">
+    select <include refid="columnAll"/>
+    from book b
+    where id = #{id}
+  </select>
+
+  <insert id="add">
+    insert into book(
+        name,
+        author,
+        press,
+        total,
+        current,
+        amount,
+        price,
+        type
+    )
+    VALUES (
+        #{item.name},
+        #{item.author},
+        #{item.press},
+        #{item.total},
+        #{item.total},
+        0,
+        #{item.price},
+        #{item.type}
+    )
+  </insert>
+
+  <update id="update">
+    update book
+      set name = #{item.name},
+          author = #{item.author},
+          press = #{item.press},
+          price = #{item.price},
+          <if test="item.total != null">
+            total = #{item.total},
+          </if>
+          <if test="item.current != null">
+            current = #{item.current},
+          </if>
+          <if test="item.amount != null">
+            amount = #{item.amount},
+          </if>
+          type = #{item.type}
+    where id = #{item.id}
+  </update>
+
+  <delete id="del">
+    delete from book where id in
+    <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
+</mapper>

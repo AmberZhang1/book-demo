@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>借出图书</title>
+  <link href="/static/libs/layui/css/layui.css" rel="stylesheet"/>
+  <link href="/static/libs/layui/css/modules/laydate/default/laydate.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="layui-row">
+  <div class="layui-col-md12">
+    <div class="layui-card">
+      <div class="layui-card-header">图书信息</div>
+      <div class="layui-card-body">
+        <form class="layui-form">
+          <div class="layui-form-item">
+            <div class="layui-inline" style="padding-top: 8px">
+              <label class="layui-form-label">名称</label>
+              <div class="layui-input-inline">
+                <input type="text" id="name" name="name" placeholder="名称" class="layui-input" th:value="${book?.name}" readonly="readonly"/>
+              </div>
+            </div>
+            <div class="layui-inline">
+              <label class="layui-form-label">作者</label>
+              <div class="layui-input-inline">
+                <input type="text" name="author" id="author" class="layui-input" th:value="${book?.author}" readonly="readonly"/>
+              </div>
+            </div>
+
+            <div class="layui-inline" style="padding-top: 8px">
+              <label class="layui-form-label">出版社</label>
+              <div class="layui-input-inline">
+                <input type="text" id="press" name="press" placeholder="出版社" class="layui-input"
+                       th:value="${book?.press}" readonly="readonly"/>
+              </div>
+            </div>
+            <div class="layui-inline">
+              <label class="layui-form-label">类型</label>
+              <div class="layui-input-inline">
+                <select name="type" id="type" readonly="readonly">
+                  <option value="0" th:selected="${book?.type== 0}">java</option>
+                  <option value="1" th:selected="${book?.type== 1}">python</option>
+                  <option value="2" th:selected="${book?.type== 2}">数据库</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="layui-form-item">
+            <div class="layui-inline">
+              <label class="layui-form-label">单价</label>
+              <div class="layui-input-inline">
+                <input type="text" name="price" id="price" class="layui-input" th:value="${book?.price}" readonly="readonly"/>
+              </div>
+            </div>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+
+    <div class="layui-card">
+      <div class="layui-card-header">租借信息</div>
+      <div class="layui-card-body">
+        <form id="searchForm" class="layui-form">
+        <input type="hidden" id="bookId" name="bookId" th:value="${book?.id}"/>
+        <div class="layui-form-item">
+          <div class="layui-inline" style="padding-top: 8px">
+            <label class="layui-form-label">租书人名称</label>
+            <div class="layui-input-inline">
+              <input type="text" id="userName" name="userName" placeholder="租书人名称" class="layui-input"/>
+            </div>
+          </div>
+          <div class="layui-inline">
+            <label class="layui-form-label">租书人名称</label>
+            <div class="layui-input-inline">
+              <input type="text" name="userPhone" id="userPhone" class="layui-input" placeholder="租书人联系方式"/>
+            </div>
+          </div>
+        </div>
+        </form>
+        <div class="layui-form-item">
+          <button class="layui-btn" id="save">立即提交</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+<script type="text/javascript" src="/static/libs/jquery/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="/static/libs/layui/layui.js"></script>
+<script type="text/javascript" src="/static/libs/layui/lay/modules/laydate.js"></script>
+<script type="text/javascript" src="/static/view/js/lend.js"></script>
+</html>

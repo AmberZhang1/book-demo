@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="cn" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>租借记录</title>
+  <link href="/static/libs/layui/css/layui.css" rel="stylesheet"/>
+  <style>
+    .layui-form-label {
+      float: left;
+      display: block;
+      padding: 9px 0px;
+      width: 100px;
+      font-weight: 400;
+      line-height: 20px;
+      text-align: right;
+    }
+    .layui-inline,.mt{
+      margin-top:10px;
+    }
+  </style>
+</head>
+<body>
+<div class="layui-fluid">
+  <div class="layui-row layui-col-space15">
+    <div class="layui-col-md12">
+      <div class="layui-card">
+        <div class="layui-card-header">租借记录</div>
+        <div class="layui-card-body">
+          <div class="test-table-reload-btn" style="margin-bottom: 10px;">
+            <form id="searchForm" class="layui-form" onsubmit="return false;">
+
+
+              <button class="layui-btn mt" data-type="reload" lay-submit="searchForm"
+                      lay-filter="searchForm" style="margin-left:10px">搜索
+              </button>
+              <button class="layui-btn mt" data-type="revert">还书</button>
+              <button class="layui-btn mt" data-type="book">返回图书列表</button>
+            </form>
+          </div>
+          <table id="approveProcessTable" lay-filter="test"></table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+<script type="text/javascript" src="/static/libs/layui/layui.js"></script>
+<script type="text/javascript" th:inline="javascript" src="/static/view/js/book_record.js"></script>
+</html>
